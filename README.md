@@ -1,119 +1,114 @@
 # 🎬 Emotional Movie Recommender
 
-Um chatbot interativo que usa IA para recomendar filmes personalizados com base no seu humor e preferências, validando cada sugestão em tempo real via TMDB.
+Um chatbot interativo com interface visual moderna que usa IA para recomendar filmes personalizados com base no seu humor e preferências, validando cada sugestão em tempo real via TMDB.
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-- **Recomendações inteligentes** — A IA sugere 3 filmes reais baseados no seu pedido (humor, gênero, sentimento)
-- **Validação automática** — Cada filme é verificado no TMDB (mínimo 500 votos), eliminando títulos inventados
-- **Detalhes completos** — Gênero, ano, nota IMDb, número de votos e sinopse
-- **Onde assistir** — Plataformas de streaming disponíveis no Brasil (via TMDB Watch Providers)
-- **Histórico de sessão** — Filmes já sugeridos nunca são repetidos na mesma conversa
-- **Correção de grafia** — Se a IA errar o título, o sistema tenta corrigir automaticamente
+* **Interface Moderna** — Web UI customizada com Gradio (estilo "Netflix Dark") com posters e cards detalhados.
+* **Recomendações Inteligentes** — O modelo Llama-3.3 sugere 3 filmes reais baseados no seu estado emocional ou pedidos específicos.
+* **Filtro de Qualidade** — Apenas filmes com **nota IMDb ≥ 7.0** e mais de **50.000 avaliações** são considerados pela IA.
+* **Validação em Tempo Real** — Cada sugestão é cruzada com o banco de dados do TMDB (mínimo de 500 votos na plataforma) para evitar alucinações.
+* **Onde Assistir** — Identificação automática de plataformas de streaming disponíveis no **Brasil** (Flatrate e Aluguel).
+* **Histórico Inteligente** — O sistema mantém um registro da sessão para garantir que filmes já sugeridos não apareçam novamente.
 
 ---
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 | Tecnologia | Uso |
-|---|---|
-| [Groq API](https://groq.com) | LLM (llama-3.3-70b-versatile) para sugestões de filmes |
-| [TMDB API](https://www.themoviedb.org/documentation/api) | Validação, detalhes e disponibilidade de streaming |
-| Python 3.10+ | Linguagem principal |
-| Google Colab | Ambiente de execução |
+| --- | --- |
+| [Groq API](https://groq.com) | LLM (llama-3.3-70b-versatile) para o motor de recomendação |
+| [TMDB API](https://www.themoviedb.org/documentation/api) | Validação de dados, posters e provedores de streaming |
+| [Gradio](https://www.gradio.app/) | Interface de usuário (Web UI) interativa e responsiva |
+| Python 3.10+ | Linguagem principal e processamento de dados |
 
 ---
 
-## 🚀 Como usar
+## Como usar
 
 ### 1. Configure as chaves de API no Google Colab
 
 Acesse **Secrets** (🔑) no painel lateral do Colab e adicione:
 
 ```
-GROQ_API_KEY   → sua chave da Groq
-TMDB_API_KEY   → sua chave do TMDB
+GROQ_API_KEY  → sua chave da Groq
+TMDB_API_KEY  → sua chave do TMDB
+
 ```
 
 ### 2. Instale as dependências
 
 ```bash
-!pip install -q groq requests
-```
-
-### 3. Execute o notebook
-
-Rode todas as células. O chatbot iniciará automaticamente no terminal interativo.
-
-### 4. Converse!
+!pip install -q groq requests gradio
 
 ```
-🎬 Bem-vindo ao seu cinema particular! (Digite 'sair' para encerrar)
 
-Você: quero algo pra chorar bastante
-Você: me sugira um filme de ação anos 90
-Você: algo leve pra assistir em família
-```
+### 3. Execute o código
 
-Digite `sair` para encerrar a sessão.
+Rode todas as células. O link da interface aparecerá logo abaixo da última célula (utilize o link `inline` ou o link `public` gerado pelo Gradio).
+
+### 4. Interaja na Interface
+
+Ao abrir a interface **CinemaEmocional**, digite seu pedido no campo de texto:
+
+* *"Quero um thriller que me deixe na ponta da cadeira"*
+* *"Um filme para assistir com a família e comer pipoca"*
 
 ---
 
-## 💡 Exemplos de pedidos
+## Exemplos de pedidos
 
 | Pedido | O que esperar |
-|---|---|
-| `"quero algo alegre"` | Comédias e filmes leves |
-| `"algo triste, drama pesado"` | Dramas emocionantes |
-| `"terror que não seja muito violento"` | Terror psicológico / suspense |
-| `"animação para criança"` | Animações infantis conhecidas |
-| `"ficção científica clássica"` | Sci-fi com alto número de votos |
-| `"quero animações"` *(após uma sugestão)* | Refina sem repetir anteriores |
+| --- | --- |
+| `"quero algo alegre"` | Comédias e animações com nota alta |
+| `"algo triste, drama pesado"` | Dramas aclamados pela crítica |
+| `"terror psicológico"` | Filmes de suspense com alta pontuação |
+| `"ficção científica clássica"` | Sci-fi com grande volume de votos |
 
 ---
 
-## ⚙️ Como funciona
+## Como funciona
 
 ```
-Usuário digita pedido
-        ↓
-IA (Groq/Llama) sugere 3 títulos reais em JSON
-        ↓
-Cada título é buscado no TMDB
-        ↓
-Validação: ≥ 500 votos + correspondência de título
-        ↓
-Se inválido → descartado com aviso
-Se válido   → exibe detalhes + streaming BR
-        ↓
-Títulos adicionados ao histórico (não se repetem)
+Usuário envia pedido pela interface Gradio
+         ↓
+IA (Groq/Llama) analisa histórico e sugere 3 títulos (JSON)
+         ↓
+Busca e Validação no TMDB (Filtro: ≥ 500 votos)
+         ↓
+Busca de Provedores de Streaming (Região: BR)
+         ↓
+Renderização de Cards HTML personalizados (Poster, Nota, Sinopse)
+         ↓
+Atualização do Histórico Global (evita repetições)
+
 ```
 
 ---
 
-## 📋 Requisitos
+## Requisitos
 
-- Conta no [Groq](https://console.groq.com) (plano gratuito disponível)
-- Conta no [TMDB](https://www.themoviedb.org/signup) (API gratuita)
-- Google Colab ou Python 3.10+ local
-
----
-
-## ⚠️ Observações
-
-- O chatbot usa o modelo `llama-3.3-70b-versatile` via Groq com `temperature=0.6` para balancear criatividade e precisão
-- Filmes com menos de 500 votos no TMDB são automaticamente descartados
-- A disponibilidade de streaming reflete o catálogo **brasileiro (BR)** no momento da consulta
-- O histórico é mantido apenas durante a sessão — reiniciar o chatbot limpa o histórico
+* Conta no [Groq Console](https://console.groq.com)
+* Chave de API do [TMDB](https://www.google.com/search?q=https://www.themoviedb.org/settings/api)
+* Ambiente Python ou Google Colab
 
 ---
 
-## 📄 Licença
+## Observações
 
-Projeto de uso pessoal/educacional. APIs utilizadas sujeitas aos termos de serviço da [Groq](https://groq.com/terms) e do [TMDB](https://www.themoviedb.org/documentation/api/terms-of-use).
+* **Nota:** A IA está instruída a priorizar filmes com nota superior a 7.0 para garantir a qualidade das indicações.
+* **Streaming:** Se um filme não estiver disponível em plataformas de assinatura, o sistema tentará listar opções de aluguel ou informará a indisponibilidade no Brasil.
+* **Normalização:** O sistema utiliza normalização Unicode para garantir que buscas com ou sem acento funcionem corretamente.
+
+---
+
+## Licença
+
+Projeto de uso pessoal/educacional desenvolvido para a disciplina de Deep Learning do curso de Ciência da Computação.
 
 ## Autoras
-- Anna Bheatryz Martins dos Santos
-- Mariana Sanchez Pedroni
+
+* **Anna Bheatryz Martins dos Santos**
+* **Mariana Sanchez Pedroni**
